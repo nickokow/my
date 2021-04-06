@@ -1,1 +1,14 @@
-# -*-coding:utf8;-*-# qpy:3# qpy:consoleimport socketimport osimport platformimport subprocessimport csvwith open('hosts.csv', newline='') as csvfile:    reader = csv.DictReader(csvfile)    for row in reader:        ping = subprocess.Popen(['ping', '-n', '1', row['IP']], stdout=subprocess.PIPE).communicate()[0]        ping = ping.decode(encoding='CP866')        if 'bytes=32' in ping or 'байт=32' in ping or '64 bytes' in ping or '64 байта' in ping:            print('ping ' + row['IP'] + ' is OK!')        else:            print('NEOK')
+# -*-coding:utf8;-*-
+import subprocess
+import csv
+
+with open('hosts.csv', newline='') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        ping = subprocess.call(['ping', '-n', '1', row['IP']], stdout=subprocess.DEVNULL)
+        #ping = ping.decode(encoding='CP866')
+        #if 'bytes=32' in ping or 'байт=32' in ping or '64 bytes' in ping or '64 байта' in ping:
+        if ping == 0:
+            print('ping ' + row['IP'] + ' is OK!')
+        else:
+            print('NEOK')
